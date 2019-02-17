@@ -1,7 +1,7 @@
 {
-	"name": "AvroViewer",
-	"displayName": "AvroViewer for VS Code",
-	"description": "",
+	"name": "vscode-avro-viewer",
+	"displayName": "Avro Viewer for VS Code",
+	"description": ".avro file viewer for VS Code",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.31.0"
