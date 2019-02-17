@@ -17,7 +17,11 @@
 		"commands": [
 			{
 				"command": "avro.preview",
-				"title": "Preview Avro File"
+				"title": "Preview Avro File",
+				"icon": {
+					"light": "media/avro.svg",
+					"dark": "media/avro.svg"
+				}
 			}
 		],
 		"menus": {
@@ -32,6 +36,13 @@
 				{
 					"command": "avro.preview",
 					"when": "resourceExtname == .avro"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "avro.preview",
+					"when": "resourceExtname == .avro",
+					"group": "myGroup@1"
 				}
 			]
 		}
