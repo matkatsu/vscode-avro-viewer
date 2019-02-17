@@ -1,27 +1,52 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as avro from 'avsc';
+const path = require('path');
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate({ subscriptions }: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-		console.log('Congratulations, your extension "AvroViewer" is now active!');
+	const myScheme = 'avro';
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+	async function decode(path: string) {
+		let metadata = '';
+		let datas: Array<string> = [];
+		const decoder = avro.createFileDecoder(path);
+		decoder.on("metadata", (type: any) => {
+			metadata = JSON.stringify(type, null, 4);
+		});
+		decoder.on("data", (type: any) => {
+			datas.push(JSON.stringify(type, null, 4));
+		});
+		await new Promise(resolve => decoder.on('end', () => resolve("ended")));
+		const data = datas.join("\n");
+		return `=============METADATA============
+${metadata}
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
-	});
+===============DATA==============
+${data}
+`;
+	}
 
-	context.subscriptions.push(disposable);
+	const myProvider = new class implements vscode.TextDocumentContentProvider {	
+		async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
+			return await decode(uri.query);
+		}
+	};
+	subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
+
+	// register a command that opens a avro-document
+	subscriptions.push(vscode.commands.registerCommand('avro.preview', async () => {
+		if (!vscode.window.activeTextEditor) {
+			return;
+		}
+		const avroUri = vscode.window.activeTextEditor.document.uri;
+		if (path.extname(avroUri.path) !== '.avro') {
+			return;
+		}
+		const title = `Preview ${avroUri.path}`;
+		const viewerUri = vscode.Uri.parse(`avro:${title}?${avroUri.path}`);
+		let doc = await vscode.workspace.openTextDocument(viewerUri); // calls back into the provider
+		await vscode.window.showTextDocument(doc, { preview: false });
+	}));
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
