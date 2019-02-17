@@ -10,16 +10,31 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:avro.preview"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "avro.preview",
+				"title": "Preview Avro File"
 			}
-		]
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "avro.preview",
+					"group": "navigation",
+					"when": "resourceExtname == .avro"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "avro.preview",
+					"when": "resourceExtname == .avro"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -34,5 +49,8 @@
 		"tslint": "^5.12.1",
 		"@types/node": "^10.12.21",
 		"@types/mocha": "^2.2.42"
+	},
+	"dependencies": {
+		"avsc": "^5.4.7"
 	}
 }
