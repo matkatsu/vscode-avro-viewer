@@ -3,6 +3,8 @@
 	"displayName": "Avro Viewer for VS Code",
 	"description": ".avro file viewer for VS Code",
 	"version": "0.0.1",
+	"publisher": "romiogaku",
+	"repository": "https://github.com/romiogaku/vscode-avro-viewer",
 	"engines": {
 		"vscode": "^1.31.0"
 	},
