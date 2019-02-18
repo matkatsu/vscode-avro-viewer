@@ -19,11 +19,7 @@
 		"commands": [
 			{
 				"command": "avro.preview",
-				"title": "Preview Avro File",
-				"icon": {
-					"light": "media/avro.svg",
-					"dark": "media/avro.svg"
-				}
+				"title": "Preview Avro File"
 			}
 		],
 		"menus": {
