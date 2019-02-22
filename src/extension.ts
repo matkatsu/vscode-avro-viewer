@@ -34,19 +34,19 @@ ${data}
 	subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
 
 	// register a command that opens a avro-document
-	subscriptions.push(vscode.commands.registerCommand('avro.preview', async () => {
-		if (!vscode.window.activeTextEditor) {
+	subscriptions.push(vscode.commands.registerCommand('avro.preview', async (fileUri) => {
+		if (typeof fileUri === 'undefined' || !(fileUri instanceof vscode.Uri)) {
 			return;
 		}
-		const avroUri = vscode.window.activeTextEditor.document.uri;
-		if (path.extname(avroUri.path) !== '.avro') {
+		if (path.extname(fileUri.path) !== '.avro') {
 			return;
 		}
-		const title = `Preview ${avroUri.path}`;
-		const viewerUri = vscode.Uri.parse(`avro:${title}?${avroUri.path}`);
+		const title = `Preview ${fileUri.path}`;
+		const viewerUri = vscode.Uri.parse(`avro:${title}?${fileUri.path}`);
 		let doc = await vscode.workspace.openTextDocument(viewerUri); // calls back into the provider
 		await vscode.window.showTextDocument(doc, { preview: false });
 	}));
+
 }
 
 export function deactivate() {}
