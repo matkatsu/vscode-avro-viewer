@@ -16,7 +16,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 		decoder.on("data", (type: any) => {
 			datas.push(JSON.stringify(type, null, 4));
 		});
-		await new Promise(resolve => decoder.on('end', () => resolve("ended")));
+		await new Promise(resolve => decoder.on('end', () => resolve()));
 		const data = datas.join("\n");
 		return `=============METADATA============
 ${metadata}
